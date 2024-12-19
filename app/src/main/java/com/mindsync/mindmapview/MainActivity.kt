@@ -1,16 +1,16 @@
 package com.mindsync.mindmapview
 
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import com.mindsync.library.MindMapManager
+import com.mindsync.library.MindMapView
 import com.mindsync.library.NodeClickListener
 import com.mindsync.library.data.CircleNodeData
 import com.mindsync.library.data.NodeData
 import com.mindsync.library.data.RectangleNodeData
 import com.mindsync.library.data.Tree
-import com.mindsync.mindmapview.databinding.ActivityMainBinding
 import com.mindsync.mindmapview.model.CircleNode
 import com.mindsync.mindmapview.model.CirclePath
 import com.mindsync.mindmapview.model.Node
@@ -19,26 +19,37 @@ import com.mindsync.mindmapview.model.RectanglePath
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MindMapViewModel>()
+    private lateinit var mindMapView: MindMapView
+    private lateinit var imgbtnMindMapAdd: ImageButton
+    private lateinit var imgbtnMindMapEdit: ImageButton
+    private lateinit var imgbtnMindMapRemove: ImageButton
+    private lateinit var imgbtnMindMapFit: ImageButton
     private lateinit var manager: MindMapManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.lifecycleOwner = this
-        setBinding()
+        setContentView(R.layout.activity_main)
         init()
         setClickEvent()
     }
+
     private fun setBinding() {
-        binding.vm = viewModel
+//        android:visibility="@{vm.selectedNode != null ? View.VISIBLE : View.GONE}"
+//        app:constraint_referenced_ids="imgbtn_mind_map_add,imgbtn_mind_map_remove,imgbtn_mind_map_edit,view_mind_map_side_bar"
     }
 
     private fun init() {
         val tree = Tree<Node>(this)
-        binding.mindMapView.setTree(tree)
-        binding.mindMapView.initialize()
-        manager = binding.mindMapView.getMindMapManager()
+        mindMapView = findViewById(R.id.mind_map_view)
+        imgbtnMindMapAdd = findViewById(R.id.imgbtn_mind_map_add)
+        imgbtnMindMapEdit = findViewById(R.id.imgbtn_mind_map_edit)
+        imgbtnMindMapFit = findViewById(R.id.imgbtn_mind_map_fit)
+        imgbtnMindMapRemove = findViewById(R.id.imgbtn_mind_map_remove)
+
+        mindMapView.setTree(tree)
+        mindMapView.initialize()
+        manager = mindMapView.getMindMapManager()
     }
 
     private fun showDialog(
@@ -51,11 +62,11 @@ class MainActivity : AppCompatActivity() {
         editDescriptionDialog.setSubmitListener { description ->
             when (operationType) {
                 "add" -> {
-                    binding.mindMapView.addNode(description)
+                    mindMapView.addNode(description)
                 }
 
                 "update" -> {
-                    binding.mindMapView.editNodeText(description)
+                    mindMapView.editNodeText(description)
                 }
 
                 else -> return@setSubmitListener
@@ -68,34 +79,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setClickEvent() {
-        with(binding) {
-            imgbtnMindMapAdd.setOnClickListener {
-                viewModel.selectedNode.value?.let { selectNode ->
-                    showDialog("add", selectNode)
-                }
+        imgbtnMindMapAdd.setOnClickListener {
+            viewModel.selectedNode.value?.let { selectNode ->
+                showDialog("add", selectNode)
             }
-            imgbtnMindMapEdit.setOnClickListener {
-                viewModel.selectedNode.value?.let { selectNode ->
-                    showDialog("update", selectNode)
-                }
-            }
-            imgbtnMindMapRemove.setOnClickListener {
-                viewModel.selectedNode.value?.let { selectNode ->
-                    mindMapView.removeNode()
-                }
-            }
-
-            imgbtnMindMapFit.setOnClickListener {
-                mindMapView.fitScreen()
-            }
-
-            mindMapView.setNodeClickListener(object : NodeClickListener {
-                override fun onClickListener(node: NodeData<*>?) {
-                    val selectedNode = createNode(node)
-                    viewModel.setSelectedNode(selectedNode)
-                }
-            })
         }
+        imgbtnMindMapEdit.setOnClickListener {
+            viewModel.selectedNode.value?.let { selectNode ->
+                showDialog("update", selectNode)
+            }
+        }
+        imgbtnMindMapRemove.setOnClickListener {
+            viewModel.selectedNode.value?.let { selectNode ->
+                mindMapView.removeNode()
+            }
+        }
+
+        imgbtnMindMapFit.setOnClickListener {
+            mindMapView.fitScreen()
+        }
+
+        mindMapView.setNodeClickListener(object : NodeClickListener {
+            override fun onClickListener(node: NodeData<*>?) {
+                val selectedNode = createNode(node)
+                viewModel.setSelectedNode(selectedNode)
+
+                imgbtnMindMapRemove.isEnabled = when (selectedNode) {
+                    is CircleNode -> false
+                    is RectangleNode -> true
+                    else -> false
+                }
+            }
+        })
     }
 
     private fun createNode(node: NodeData<*>?): Node? {

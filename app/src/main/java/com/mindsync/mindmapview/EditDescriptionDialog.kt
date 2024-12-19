@@ -1,7 +1,6 @@
 package com.mindsync.mindmapview
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -9,14 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.EditText
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import com.mindsync.mindmapview.databinding.DialogEditDescriptionBinding
 
 class EditDescriptionDialog : DialogFragment() {
-    private var _binding: DialogEditDescriptionBinding? = null
-    private val binding get() = _binding!!
     private val editDescriptionViewModel: EditDescriptionViewModel by viewModels()
+    private lateinit var btnSubmit:Button
+    private lateinit var btnCancel:Button
+    private lateinit var edtNodeDescription:EditText
     private var submitListener: ((String) -> (Unit))? = null
     private var description: String = ""
 
@@ -41,8 +43,11 @@ class EditDescriptionDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = DialogEditDescriptionBinding.inflate(inflater, container, false)
-        return binding.root
+        val view = inflater.inflate(R.layout.dialog_edit_description, container, false)
+        btnCancel = view.findViewById(R.id.btn_cancel)
+        btnSubmit = view.findViewById(R.id.btn_submit)
+        edtNodeDescription = view.findViewById(R.id.et_node_description)
+        return view
     }
 
     override fun onViewCreated(
@@ -50,19 +55,13 @@ class EditDescriptionDialog : DialogFragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        setBinding()
         setViewModel()
-        setupCancelBtn()
-        setupSubmitBtn()
+        setupViews()
     }
 
     override fun onStart() {
         super.onStart()
         resizeDialog()
-    }
-
-    private fun setBinding() {
-        binding.vm = editDescriptionViewModel
     }
 
     private fun setViewModel() {
@@ -74,16 +73,19 @@ class EditDescriptionDialog : DialogFragment() {
         }
     }
 
-    private fun setupSubmitBtn() {
-        binding.btnSubmit.setOnClickListener {
+    private fun setupViews() {
+        btnSubmit.setOnClickListener {
             editDescriptionViewModel.submitListener?.invoke(editDescriptionViewModel.description.value)
             dismiss()
         }
-    }
-
-    private fun setupCancelBtn() {
-        binding.btnCancel.setOnClickListener {
+        btnCancel.setOnClickListener {
             dismiss()
+        }
+        edtNodeDescription.apply {
+            addTextChangedListener { newText ->
+                editDescriptionViewModel.setDescription(newText.toString())
+            }
+            setText(editDescriptionViewModel.description.value)
         }
     }
 
@@ -97,10 +99,5 @@ class EditDescriptionDialog : DialogFragment() {
         params?.width = (deviceWidth * 0.8).toInt()
         params?.height = (deviceHeight * 0.5).toInt()
         dialog?.window?.attributes = params as WindowManager.LayoutParams
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        _binding = null
-        super.onDismiss(dialog)
     }
 }

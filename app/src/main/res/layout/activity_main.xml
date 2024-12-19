@@ -1,41 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-  <data>
-
-    <variable
-        name="vm"
-        type="com.mindsync.mindmapview.MindMapViewModel" />
-
-    <import type="android.view.View" />
-  </data>
-
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
     <com.mindsync.library.MindMapView
         android:id="@+id/mind_map_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/view_mind_map_side_bar"
-        app:nodeFontFamily="@font/pretendard_bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Group
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="@{vm.selectedNode != null ? View.VISIBLE : View.GONE}"
-        app:constraint_referenced_ids="imgbtn_mind_map_add,imgbtn_mind_map_remove,imgbtn_mind_map_edit,view_mind_map_side_bar"
-        app:layout_constraintBottom_toBottomOf="@id/view_mind_map_side_bar"
-        app:layout_constraintEnd_toEndOf="@id/view_mind_map_side_bar"
-        app:layout_constraintStart_toStartOf="@id/view_mind_map_side_bar"
-        app:layout_constraintTop_toTopOf="@id/view_mind_map_side_bar" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:nodeFontFamily="@font/pretendard_bold" />
 
     <View
         android:id="@+id/view_mind_map_side_bar"
@@ -67,7 +46,7 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/imgbtn_mind_map_add"
         app:layout_constraintTop_toTopOf="@id/view_mind_map_side_bar"
-        app:removeBtn="@{vm.selectedNode}" />
+        />
 
     <ImageButton
         android:id="@+id/imgbtn_mind_map_edit"
@@ -90,5 +69,4 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintTop_toTopOf="parent" />
-  </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>
