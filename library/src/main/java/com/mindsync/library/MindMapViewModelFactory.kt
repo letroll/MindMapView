@@ -1,4 +1,4 @@
-package com.mindsync.mindmapview
+package com.mindsync.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -2,7 +2,6 @@ package com.mindsync.library.data
 
 import com.mindsync.library.util.Dp
 
-
 sealed class NodeData<T>(
     open val id: String,
     open val parentId: String?,

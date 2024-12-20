@@ -1,5 +1,6 @@
-package com.mindsync.mindmapview
+package com.mindsync.library.ui.dialog
 
+import android.text.Editable
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,7 @@ class EditDescriptionViewModel : ViewModel() {
         _description.value = text
     }
 
-    fun onDescriptionChanged(inputDescription: CharSequence) {
+    fun onDescriptionChanged(inputDescription: Editable?) {
         _description.value = inputDescription.toString()
     }
 }

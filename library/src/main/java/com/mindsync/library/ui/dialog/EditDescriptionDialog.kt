@@ -1,4 +1,4 @@
-package com.mindsync.mindmapview
+package com.mindsync.library.ui.dialog
 
 import android.app.Dialog
 import android.graphics.Color
@@ -13,6 +13,7 @@ import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import com.mindsync.library.R
 
 class EditDescriptionDialog : DialogFragment() {
     private val editDescriptionViewModel: EditDescriptionViewModel by viewModels()
@@ -83,7 +84,7 @@ class EditDescriptionDialog : DialogFragment() {
         }
         edtNodeDescription.apply {
             addTextChangedListener { newText ->
-                editDescriptionViewModel.setDescription(newText.toString())
+                editDescriptionViewModel.onDescriptionChanged(newText)
             }
             setText(editDescriptionViewModel.description.value)
         }

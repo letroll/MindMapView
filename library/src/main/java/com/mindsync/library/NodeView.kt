@@ -4,10 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.res.ResourcesCompat
 import com.mindsync.library.animator.MindMapAnimator
 import com.mindsync.library.animator.TreeChangeAnimation
 import com.mindsync.library.data.CircleNodeData
