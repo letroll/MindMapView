@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mindsync.library.MindMapManager
 import com.mindsync.library.MindMapView
@@ -35,8 +37,6 @@ fun ComposableMindMapView(
     onNodeSlect:(Node?)->Unit,
     dialogToShow: (EditDescriptionDialog)->Unit,
 ) {
-
-    lateinit var manager: MindMapManager
     var canRemove by remember { mutableStateOf(true) }
     var description by remember { mutableStateOf("") }
     var operationType by remember { mutableStateOf(None) }
@@ -50,11 +50,10 @@ fun ComposableMindMapView(
             factory = { context ->
                 val tree = Tree<Node>(context)
                 MindMapView(context).apply {
-//                        setBackgroundColor(Color.Blue.toArgb())
+                        setBackgroundColor(Color.Blue.toArgb())
                     clipToOutline = true
                     setTree(tree)
                     initialize()
-                    manager = getMindMapManager()
                     setNodeClickListener(object : NodeClickListener {
                         override fun onClickListener(node: NodeData<*>?) {
                             val newSelectedNode = createNode(node)
@@ -95,7 +94,6 @@ fun ComposableMindMapView(
         if (selectedNode != null) {
             MapViewBar(
                 modifier = Modifier,
-//                        .background(Color.Green),
                 canRemove = canRemove,
                 onAction = { action,newDescription ->
                     when (action) {

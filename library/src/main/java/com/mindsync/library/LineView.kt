@@ -34,7 +34,7 @@ class LineView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun traverseLine(
+    private fun traverseLine(
         canvas: Canvas,
         node: NodeData<*>,
         depth: Int,

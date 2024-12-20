@@ -33,6 +33,7 @@ class NodeView @JvmOverloads constructor(
     private val mindMapAnimator = MindMapAnimator()
     var listener: NodeClickListener? = null
     var moveListener: NodeMoveListener? = null
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawAttachedNode(canvas)

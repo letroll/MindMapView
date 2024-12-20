@@ -94,12 +94,12 @@ class MindMapView @JvmOverloads constructor(
         }
 
         setMeasuredDimension(
-            maxOf(
+            /* measuredWidth = */ maxOf(
                 width,
                 mindMapManager.measureWidth(mindMapManager.getTree().getRootNode()).toPx(context)
                     .toInt() + mindMapManager.getTree().getRootNode().path.centerX.toPx(context)
                     .toInt()
-            ), maxOf(
+            ), /* measuredHeight = */ maxOf(
                 height,
                 mindMapManager.measureHeight(mindMapManager.getTree().getRootNode()).toPx(context)
                     .toInt() + mindMapManager.getTree().getRootNode().path.centerY.toPx(context)
@@ -110,10 +110,10 @@ class MindMapView @JvmOverloads constructor(
 
     override fun onLayout(
         changed: Boolean,
-        l: Int,
-        t: Int,
-        r: Int,
-        b: Int,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
     ) {
         val childCount = childCount
         for (index in 0 until childCount) {
@@ -210,9 +210,7 @@ class MindMapView @JvmOverloads constructor(
         this.addNode = node
     }
 
-    fun getAddNode(): RectangleNodeData? {
-        return this.addNode
-    }
+    fun getAddNode(): RectangleNodeData? = this.addNode
 
     fun removeNode() {
         mindMapManager.getSelectedNode()?.let { node ->
@@ -277,13 +275,9 @@ class MindMapView @JvmOverloads constructor(
         requestLayout()
     }
 
-    fun getTree(): Tree<*> {
-        return mindMapManager.getTree()
-    }
+    fun getTree(): Tree<*> = mindMapManager.getTree()
 
-    fun getMindMapManager(): MindMapManager {
-        return mindMapManager
-    }
+    fun getMindMapManager(): MindMapManager = mindMapManager
 
     fun setNodeClickListener(nodeClickListener: NodeClickListener) {
         nodeView.listener = nodeClickListener

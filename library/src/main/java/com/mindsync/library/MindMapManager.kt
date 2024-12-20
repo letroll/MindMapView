@@ -53,25 +53,17 @@ class MindMapManager(context: Context) {
         this.isMoving = false
     }
 
-    fun getMovingState(): Boolean {
-        return this.isMoving
-    }
+    fun getMovingState(): Boolean = this.isMoving
 
-    fun getSelectedNode(): NodeData<*>? {
-        return this.selectNode
-    }
+    fun getSelectedNode(): NodeData<*>? = this.selectNode
 
     fun arrangeTree() {
         rightLayoutManager.arrangeNode(this.tree)
     }
 
-    fun measureHeight(node: NodeData<*>): Dp {
-        return rightLayoutManager.measureChildHeight(node, tree)
-    }
+    fun measureHeight(node: NodeData<*>): Dp = rightLayoutManager.measureChildHeight(node, tree)
 
-    fun measureWidth(node: NodeData<*>): Dp {
-        return rightLayoutManager.measureChildWidth(node, tree)
-    }
+    fun measureWidth(node: NodeData<*>): Dp = rightLayoutManager.measureChildWidth(node, tree)
 
     fun deepCopyTree(): Map<String, NodeData<*>> {
         return this.tree.nodes.entries.associate { node ->
@@ -84,8 +76,6 @@ class MindMapManager(context: Context) {
         measureTextSize.traverseTextHead(tree)
     }
 
-    fun getTree(): Tree<*> {
-        return this.tree
-    }
+    fun getTree(): Tree<*> = this.tree
 
 }
