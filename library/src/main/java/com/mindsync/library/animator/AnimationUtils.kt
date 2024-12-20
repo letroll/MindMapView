@@ -7,7 +7,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 
 object AnimationUtils {
-    const val ANIMATION_DURATION = 300L
+    private const val ANIMATION_DURATION = 300L
     const val START_PROCESS = 0f
     const val END_PROCESS = 1f
 
@@ -17,7 +17,7 @@ object AnimationUtils {
         duration: Long = ANIMATION_DURATION,
         interpolator: Interpolator = AccelerateDecelerateInterpolator(),
         onUpdate: (Float) -> Unit
-    ) = ObjectAnimator.ofFloat(start, end).apply {
+    ): ValueAnimator = ObjectAnimator.ofFloat(start, end).apply {
         this.duration = duration
         this.interpolator = interpolator
         addUpdateListener { animation ->
@@ -31,7 +31,7 @@ object AnimationUtils {
         duration: Long = ANIMATION_DURATION,
         interpolator: Interpolator = AccelerateDecelerateInterpolator(),
         onUpdate: (scale: Float, currentX: Float, currentY: Float) -> Unit
-    ) = ValueAnimator.ofPropertyValuesHolder(*holderValue)
+    ): ValueAnimator = ValueAnimator.ofPropertyValuesHolder(*holderValue)
         .apply {
             this.duration = duration
             this.interpolator = interpolator

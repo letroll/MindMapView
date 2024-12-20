@@ -47,7 +47,7 @@ class MeasureTextSize(private val context: Context) {
         }
 
         is RectangleNodeData -> {
-            var newWidth = Dp(Px(width).toDp(context)) + drawInfo.padding
+            val newWidth = Dp(Px(width).toDp(context)) + drawInfo.padding
             val newHeight = Dp(Px(height).toDp(context)) + drawInfo.padding
             nodeData.copy(
                 id = nodeData.id,

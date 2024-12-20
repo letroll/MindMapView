@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     `maven-publish`
@@ -34,9 +35,22 @@ android {
     publishing {
         singleVariant("release")
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    val composeBom = platform("androidx.compose:compose-bom:2024.09.03")
+    implementation(composeBom)
+    testImplementation(composeBom)
+    androidTestImplementation(composeBom)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

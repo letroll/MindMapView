@@ -27,7 +27,7 @@ class Tree<T> {
                         Dp(centerY),
                         Dp(50f),
                     ),
-                "root",
+                DEFAULT_ROOT_TEXT,
                 listOf(),
             ) as NodeData<T>
     }
@@ -36,9 +36,7 @@ class Tree<T> {
         this._nodes = nodes.toMutableMap()
     }
 
-    fun copy(nodes: Map<String, NodeData<T>>): Tree<T> {
-        return Tree(nodes)
-    }
+    fun copy(nodes: Map<String, NodeData<T>>): Tree<T> = Tree(nodes)
 
     fun getRootNode(): CircleNodeData {
         _nodes[ROOT_ID]
@@ -180,5 +178,6 @@ class Tree<T> {
 
     companion object {
         private const val ROOT_ID = "root"
+        private const val DEFAULT_ROOT_TEXT = "root"
     }
 }
