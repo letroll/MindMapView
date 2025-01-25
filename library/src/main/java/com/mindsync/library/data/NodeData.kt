@@ -1,5 +1,8 @@
 package com.mindsync.library.data
 
+import com.mindsync.library.model.CirclePath
+import com.mindsync.library.model.NodePath
+import com.mindsync.library.model.RectanglePath
 import com.mindsync.library.util.Dp
 
 sealed class NodeData<T>(

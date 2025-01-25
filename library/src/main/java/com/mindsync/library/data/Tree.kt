@@ -1,6 +1,7 @@
 package com.mindsync.library.data
 
 import android.content.Context
+import com.mindsync.library.model.CirclePath
 import com.mindsync.library.util.Dp
 import com.mindsync.library.util.ExceptionMessage
 import com.mindsync.library.util.NodeGenerator
@@ -177,7 +178,7 @@ class Tree<T> {
     }
 
     companion object {
-        private const val ROOT_ID = "root"
-        private const val DEFAULT_ROOT_TEXT = "root"
+        const val ROOT_ID = "root"
+        const val DEFAULT_ROOT_TEXT = "root"
     }
 }

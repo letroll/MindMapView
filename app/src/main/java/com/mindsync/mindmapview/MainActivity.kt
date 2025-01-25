@@ -12,17 +12,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.mindsync.library.MindMapManager
 import com.mindsync.library.MindMapViewModel
-import com.mindsync.library.ui.ComposableMindMapView
+import com.mindsync.library.animator.MindMapAnimator
+import com.mindsync.library.data.NodeData
+import com.mindsync.library.data.Tree
+import com.mindsync.library.data.Tree.Companion.DEFAULT_ROOT_TEXT
+import com.mindsync.library.ui.component.ComposableMindMapView
+import com.mindsync.library.ui.primaryContainerLight
+import com.mindsync.library.ui.primaryLight
+import com.mindsync.library.util.NodeGenerator
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MindMapViewModel>()
-
-    val primaryLight = Color(0xFF805610)
-    val primaryContainerLight = Color(0xFFFFDDB3)
+    private lateinit var mindMapManager : MindMapManager
+    private val mindMapAnimator = MindMapAnimator()
+    private val rootNode = NodeGenerator.makeRootNode()
+    private val rootNodeMap = Pair(DEFAULT_ROOT_TEXT,rootNode)
+    private val tree = Tree<NodeData<*>>(
+            mapOf(rootNodeMap)
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +43,9 @@ class MainActivity : AppCompatActivity() {
                 darkScrim = primaryContainerLight.toArgb()
             )
         )
+        mindMapManager = MindMapManager(this)
+        tree.setRootNode(rootNode)
+        mindMapManager.setTree(tree)
         setContent {
             val state = viewModel.uiState.collectAsState()
             MaterialTheme {
@@ -42,6 +56,8 @@ class MainActivity : AppCompatActivity() {
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .fillMaxSize(),
+                            mindMapManager = mindMapManager,
+                            mindMapAnimator = mindMapAnimator,
                             selectedNode = state.value.selectedNode,
                             onNodeSlect = { newSelectedNode ->
                                 viewModel.setSelectedNode(newSelectedNode)

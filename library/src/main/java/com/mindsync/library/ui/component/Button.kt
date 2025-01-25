@@ -1,4 +1,4 @@
-package com.mindsync.library.ui
+package com.mindsync.library.ui.component
 
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable

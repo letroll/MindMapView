@@ -1,4 +1,4 @@
-package com.mindsync.library.ui
+package com.mindsync.library.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -39,14 +39,14 @@ fun MapViewBar(
                 )
             }
         )
-        Button(
-            iconResId = if (canRemove) R.drawable.ic_remove else R.drawable.ic_banned_remove,
-            onClick = {
-                if (canRemove) {
-                    onAction(Remove,"")
+        if (canRemove) {
+            Button(
+                iconResId = R.drawable.ic_remove,
+                onClick = {
+                    onAction(Remove, "")
                 }
-            }
-        )
+            )
+        }
         Button(
             iconResId = R.drawable.ic_outlined_drawing,
             onClick = {

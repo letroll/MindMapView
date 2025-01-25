@@ -1,4 +1,4 @@
-package com.mindsync.library.ui
+package com.mindsync.library.ui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -13,6 +13,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.mindsync.library.MindMapManager
 import com.mindsync.library.MindMapView
 import com.mindsync.library.NodeClickListener
+import com.mindsync.library.animator.MindMapAnimator
 import com.mindsync.library.data.CircleNodeData
 import com.mindsync.library.data.NodeData
 import com.mindsync.library.data.RectangleNodeData
@@ -33,10 +34,13 @@ import com.mindsync.library.util.Dp
 @Composable
 fun ComposableMindMapView(
     modifier: Modifier = Modifier,
+    mindMapManager: MindMapManager,
+    mindMapAnimator: MindMapAnimator,
     selectedNode: Node?,
-    onNodeSlect:(Node?)->Unit,
-    dialogToShow: (EditDescriptionDialog)->Unit,
+    onNodeSlect: (Node?) -> Unit,
+    dialogToShow: (EditDescriptionDialog) -> Unit,
 ) {
+    val useCompose by remember { mutableStateOf(false) }
     var canRemove by remember { mutableStateOf(true) }
     var description by remember { mutableStateOf("") }
     var operationType by remember { mutableStateOf(None) }
@@ -44,70 +48,98 @@ fun ComposableMindMapView(
     Column(
         modifier = modifier,
     ) {
-        AndroidView(
-            modifier = Modifier
-                .weight(1f),
-            factory = { context ->
-                val tree = Tree<Node>(context)
-                MindMapView(context).apply {
+        if (useCompose) {
+            MindMapComposable(
+                mindMapManager = mindMapManager,
+                mindMapAnimator = mindMapAnimator,
+                operationType = operationType,
+                description = description,
+                onNodeSelect = { node ->
+                    val newSelectedNode = createNode(node)
+                    onNodeSlect(newSelectedNode)
+
+                    canRemove = when (newSelectedNode) {
+                        is CircleNode -> false
+                        is RectangleNode -> true
+                        else -> false
+                    }
+                },
+                selectedNode = selectedNode,
+                modifier = Modifier
+                    .weight(1f),
+            )
+        } else {
+            AndroidView(
+                modifier = Modifier
+                    .weight(1f),
+                factory = { context ->
+                    val tree = Tree<Node>(context)
+                    MindMapView(context).apply {
                         setBackgroundColor(Color.Blue.toArgb())
-                    clipToOutline = true
-                    setTree(tree)
-                    initialize()
-                    setNodeClickListener(object : NodeClickListener {
-                        override fun onClickListener(node: NodeData<*>?) {
-                            val newSelectedNode = createNode(node)
-                            onNodeSlect(newSelectedNode)
+                        clipToOutline = true
+                        setTree(tree)
+                        initialize()
+                        setNodeClickListener(object : NodeClickListener {
+                            override fun onClickListener(node: NodeData<*>?) {
+                                val newSelectedNode = createNode(node)
+                                onNodeSlect(newSelectedNode)
 
-                            canRemove = when (newSelectedNode) {
-                                is CircleNode -> false
-                                is RectangleNode -> true
-                                else -> false
+                                canRemove = when (newSelectedNode) {
+                                    is CircleNode -> false
+                                    is RectangleNode -> true
+                                    else -> false
+                                }
                             }
+                        })
+                    }
+                },
+                update = { view ->
+                    // View's been inflated or state read in this block has been updated
+                    // Add logic here if necessary
+                    when (operationType) {
+                        Add -> {
+                            view.addNode(description)
+                            operationType = None
                         }
-                    })
-                }
-            },
-            update = { view ->
-                // View's been inflated or state read in this block has been updated
-                // Add logic here if necessary
-                when(operationType){
-                    Add -> {
-                        view.addNode(description)
-                        operationType = None
-                    }
-                    Edit -> {
-                        view.editNodeText(description)
-                        operationType = None
-                    }
-                    FitScreen -> {
-                        view.fitScreen()
-                    }
-                    Remove -> {
-                        view.removeNode()
-                    }
 
-                    None -> {}
+                        Edit -> {
+                            view.editNodeText(description)
+                            operationType = None
+                        }
+
+                        FitScreen -> {
+                            view.fitScreen()
+                        }
+
+                        Remove -> {
+                            view.removeNode()
+                        }
+
+                        None -> {}
+                    }
                 }
-            }
-        )
+            )
+        }
         if (selectedNode != null) {
             MapViewBar(
                 modifier = Modifier,
                 canRemove = canRemove,
-                onAction = { action,newDescription ->
+                onAction = { action, newDescription ->
                     when (action) {
                         Add -> {
                             description = newDescription
                             operationType = action
                         }
+
                         Edit -> {
                             description = newDescription
                             operationType = action
                         }
+
                         FitScreen -> {
                             operationType = action
                         }
+
                         Remove -> {
                             operationType = action
                         }
